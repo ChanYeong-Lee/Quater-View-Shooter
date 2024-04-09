@@ -4,38 +4,52 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    private CameraInput input;
+
     public Transform mainTarget;
-    public Camera cam;
+    public CameraMove cam;
+
+    public float padding;
+    public float sensitivity;
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (input.space)
         {
-            float offsetX = cam.transform.position.y * 0.905f;
-            float offsetY = cam.transform.position.y;
-            float offsetZ = -cam.transform.position.y * 0.905f;
-            Vector3 offset = new Vector3(offsetX, offsetY, offsetZ);
-            cam.transform.position = mainTarget.transform.position + offset; 
+            cam.LookAt(mainTarget.transform.position);
         }
+
+        Move();
     }
 
-    public void Zoom(float zoomAmount)
+    private void Move()
     {
-        cam.orthographicSize += zoomAmount;
-    }
+        float minX = padding;
+        float maxX = Screen.width - padding;
 
-    public void MoveRight(float amount)
-    {
-        cam.transform.Translate(Vector3.right * amount, Space.Self);
-    }
+        float minY = padding;
+        float maxY = Screen.height - padding;
 
-    public void MoveUp(float amount)
-    {
-        Vector3 upward = cam.transform.forward;
-        upward.y = 0.0f;
-        upward.Normalize();
-        upward /= Mathf.Sin(45.0f * Mathf.Deg2Rad);
+        float moveAmount = sensitivity * Time.deltaTime;
 
-        cam.transform.Translate(upward * amount, Space.World);
+        if (Input.mousePosition.x < minX)
+        {
+            cam.MoveRight(-moveAmount);
+        }
+
+        if (Input.mousePosition.x > maxX)
+        {
+            cam.MoveRight(moveAmount);
+        }
+
+        if (Input.mousePosition.y < minY)
+        {
+            cam.MoveUp(-moveAmount);
+        }
+
+        if (Input.mousePosition.y > maxY)
+        {
+            cam.MoveUp(moveAmount);
+        }
     }
 }
