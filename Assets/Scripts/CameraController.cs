@@ -11,6 +11,12 @@ public class CameraController : MonoBehaviour
 
     public float padding;
     public float sensitivity;
+    public float zoomSensitivity;
+
+    private void Awake()
+    {
+        input = GetComponent<CameraInput>();
+    }
 
     private void Update()
     {
@@ -20,6 +26,7 @@ public class CameraController : MonoBehaviour
         }
 
         Move();
+        cam.Zoom(-input.scroll * zoomSensitivity);
     }
 
     private void Move()

@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraMove : MonoBehaviour
 {
     private Camera cam;
+    public Vector2 zoomLimit;
 
     private void Awake()
     {
@@ -14,12 +15,14 @@ public class CameraMove : MonoBehaviour
     public void Zoom(float zoomAmount)
     {
         cam.orthographicSize += zoomAmount;
+        cam.orthographicSize = Mathf.Clamp(cam.orthographicSize, zoomLimit.x, zoomLimit.y);
     }
+
     public void LookAt(Vector3 pos)
     {
-        float offsetX = cam.transform.position.y * 0.905f;
-        float offsetY = cam.transform.position.y;
-        float offsetZ = -cam.transform.position.y * 0.905f;
+        float offsetY = transform.position.y - pos.y;
+        float offsetX = offsetY * 0.905f;
+        float offsetZ = -offsetY * 0.905f;
         Vector3 offset = new Vector3(offsetX, offsetY, offsetZ);
 
         transform.position = pos + offset;

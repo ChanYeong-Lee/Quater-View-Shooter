@@ -6,11 +6,12 @@ public class CameraInput : MonoBehaviour
 {
     public bool space;
     public Vector2 arrow;
-
+    public float scroll;
     private void Update()
     {
         InputSpace();
         InputArrow();
+        InputScroll();
     }
 
     private void InputSpace()
@@ -41,5 +42,10 @@ public class CameraInput : MonoBehaviour
         {
             arrow.x = 0.0f;
         }
+    }
+
+    private void InputScroll()
+    {
+        scroll = Input.mouseScrollDelta.y;
     }
 }
