@@ -19,6 +19,14 @@ public class PlayerMove : MonoBehaviour
     public float dashTime;
     public bool canDash;
 
+    public float dashCoolAmount
+    {
+        get
+        {
+            return Mathf.Clamp((Time.time - dashTime) / dashDelay, 0.0f, 1.0f);
+        }
+    }
+
     private float currentSpeed;
     private bool dash;
     private Queue<Action> actionQueue;

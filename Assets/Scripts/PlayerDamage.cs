@@ -9,11 +9,19 @@ public class PlayerDamage : MonoBehaviour
     public Action onDie;
     public Action<float> onHPChanged;
 
-
+    
     public bool alive;
 
     public float maxHP;
     public float currentHP;
+    public float HPAmount
+    {
+        get
+        {
+            return Mathf.Clamp(currentHP / maxHP, 0.0f, 1.0f);
+        }
+    }
+
     public float CurrentHP
     {
         get { return currentHP; }
@@ -42,6 +50,12 @@ public class PlayerDamage : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    private void OnEnable()
+    {
+        CurrentHP = maxHP;
+        alive = true;
+    }
+    
     public void TakeDamage(Vector3 position, Vector3 direction, float damage)
     {
         agent.enabled = false;

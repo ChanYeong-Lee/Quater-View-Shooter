@@ -7,6 +7,13 @@ public class PlayerAttack : MonoBehaviour
     public float attackRange;
     public float attackDelay;
     public float attackTime;
+    public float attackCoolAmount
+    {
+        get
+        {
+            return Mathf.Clamp((Time.time - attackTime) / attackDelay, 0.0f, 1.0f);
+        }
+    }
 
     public Bullet bulletPrefab;
     public float bulletSpeed;
@@ -14,6 +21,7 @@ public class PlayerAttack : MonoBehaviour
 
     public bool inputAttack;
     public bool canAttack;
+
 
     public void TryShot()
     {
