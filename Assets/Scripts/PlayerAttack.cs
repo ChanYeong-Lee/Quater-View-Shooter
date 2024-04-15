@@ -1,10 +1,10 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour
+public class PlayerAttack : MonoBehaviourPun
 {
-    public float attackRange;
     public float attackDelay;
     public float attackTime;
     public float attackCoolAmount
@@ -45,11 +45,11 @@ public class PlayerAttack : MonoBehaviour
 
     public void Shot(Vector3 direction)
     {
-        Bullet bulletInstance = Instantiate(bulletPrefab);
+        Bullet bulletInstance = PhotonNetwork.Instantiate("Prefabs/Bullet", shotPoint.position, Quaternion.LookRotation(direction), 0, new object[] { bulletSpeed }).GetComponent<Bullet>();
         bulletInstance.transform.position = shotPoint.position;
         bulletInstance.transform.forward = direction;
 
-        bulletInstance.Shot(bulletSpeed);
+        bulletInstance.Shot(this, bulletSpeed);
 
         attackTime = Time.time;
         inputAttack = false;

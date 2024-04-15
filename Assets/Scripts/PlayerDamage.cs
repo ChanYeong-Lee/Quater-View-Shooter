@@ -9,7 +9,6 @@ public class PlayerDamage : MonoBehaviour
     public Action onDie;
     public Action<float> onHPChanged;
 
-    
     public bool alive;
 
     public float maxHP;
@@ -19,21 +18,6 @@ public class PlayerDamage : MonoBehaviour
         get
         {
             return Mathf.Clamp(currentHP / maxHP, 0.0f, 1.0f);
-        }
-    }
-
-    public float CurrentHP
-    {
-        get { return currentHP; }
-        set
-        {
-            currentHP = value;
-            if (currentHP <= 0.0f)
-            {
-                currentHP = 0.0f;
-                Die();
-            }
-            onHPChanged?.Invoke(currentHP);
         }
     }
 
@@ -52,17 +36,17 @@ public class PlayerDamage : MonoBehaviour
 
     private void OnEnable()
     {
-        CurrentHP = maxHP;
+        currentHP = maxHP;
         alive = true;
     }
-    
-    public void TakeDamage(Vector3 position, Vector3 direction, float damage)
+
+    public void TakeDamage(PlayerAttack attacker, Vector3 position, Vector3 direction, float damage)
     {
         agent.enabled = false;
         rigid.isKinematic = false;
 
         rigid.AddForce(damage * direction, ForceMode.Impulse);
-        
+
         if (damagedCoroutine != null)
         {
             StopCoroutine(damagedCoroutine);
@@ -74,7 +58,7 @@ public class PlayerDamage : MonoBehaviour
         animator.SetBool("Damaged", true);
         animator.SetFloat("DamageValue", damageValue);
 
-        float forwardValue = Vector3.Dot(transform.forward, direction);          
+        float forwardValue = Vector3.Dot(transform.forward, direction);
         float rightValue = Vector3.Dot(transform.right, direction);
 
         if (forwardValue > 0.71f)
@@ -92,6 +76,16 @@ public class PlayerDamage : MonoBehaviour
         else if (rightValue > 0.71f)
         {
             animator.SetInteger("DamageDirection", 3);
+        }
+
+        currentHP -= damage;
+        if (currentHP <= 0)
+        {   
+            if (attacker == GameManager.Instance.playerModel.attack)
+            {
+                GameManager.Instance.GetKill();
+            }
+            Die();
         }
     }
 
