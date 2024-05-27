@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour, IInRoomCallbacks
     public CameraController cameraController;
     public PlayerModel playerModel;
     public List<Transform> spawnPoints;
+    public List<PlayerModel> wholeModels;
 
     public int goalKill = 10;
 
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour, IInRoomCallbacks
         propertiesToSet["Death"] = 0;
         PhotonNetwork.LocalPlayer.SetCustomProperties(propertiesToSet);
 
-        yield return new WaitUntil(() => PhotonNetwork.LocalPlayer.GetPlayerNumber() > -1);
+        yield return new WaitUntil(() => PhotonNetwork.LocalPlayer.GetPlayerNumber() >= 0);
 
         int random = Random.Range(0, 2);
         Vector3 spawnPoint = spawnPoints[PhotonNetwork.LocalPlayer.GetPlayerNumber()].position;
@@ -62,6 +63,7 @@ public class GameManager : MonoBehaviour, IInRoomCallbacks
 
         playerController.model = playerModel;
         cameraController.mainTarget = playerModel.transform;
+        cameraController.cam.LookAt(playerModel.transform.position);
 
         playerController.gameObject.SetActive(true);
         cameraController.gameObject.SetActive(true);

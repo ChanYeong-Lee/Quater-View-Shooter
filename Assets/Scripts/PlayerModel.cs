@@ -1,9 +1,10 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerModel : MonoBehaviour
+public class PlayerModel : MonoBehaviourPun
 {
     public PlayerMove move { get; private set; }
     public NavMeshAgent agent { get; private set; }
@@ -18,5 +19,15 @@ public class PlayerModel : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         attack = GetComponent<PlayerAttack>();
         damage = GetComponent<PlayerDamage>();  
+    }
+
+    private void OnEnable()
+    {
+        GameManager.Instance.wholeModels.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.wholeModels.Remove(this);
     }
 }

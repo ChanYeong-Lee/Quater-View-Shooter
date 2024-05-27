@@ -38,15 +38,16 @@ public class PhotonManager : MonoBehaviourPunCallbacks
         Debug.Log($"연결을 해제합니다. 사유 : {cause.ToString()}");
         PanelManager.Instance.OpenPanel(PanelType.Login);   
     }
+
     public override void OnJoinedRoom()
     {
         PanelManager.Instance.OpenPanel(PanelType.Room);
     }
 
-    public override void OnLeftRoom()
-    {
-        PanelManager.Instance.OpenPanel(PanelType.Menu);
-    }
+    //public override void OnLeftRoom()
+    //{
+    //    PanelManager.Instance.OpenPanel(PanelType.Menu);
+    //}
 
     public override void OnCreatedRoom()
     {
@@ -66,8 +67,5 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         this.roomList = roomList;
-        PanelManager.Instance.lobby.UpdateRoomList();
     }
-
-
 }

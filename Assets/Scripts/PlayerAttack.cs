@@ -46,8 +46,6 @@ public class PlayerAttack : MonoBehaviourPun
     public void Shot(Vector3 direction)
     {
         Bullet bulletInstance = PhotonNetwork.Instantiate("Prefabs/Bullet", shotPoint.position, Quaternion.LookRotation(direction), 0, new object[] { bulletSpeed }).GetComponent<Bullet>();
-        bulletInstance.transform.position = shotPoint.position;
-        bulletInstance.transform.forward = direction;
 
         bulletInstance.Shot(this, bulletSpeed);
 

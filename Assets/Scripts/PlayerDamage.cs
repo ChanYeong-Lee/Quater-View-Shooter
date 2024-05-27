@@ -1,10 +1,11 @@
+using Photon.Pun;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class PlayerDamage : MonoBehaviour
+public class PlayerDamage : MonoBehaviourPun
 {
     public Action onDie;
     public Action<float> onHPChanged;
@@ -40,24 +41,16 @@ public class PlayerDamage : MonoBehaviour
         alive = true;
     }
 
-    public void TakeDamage(PlayerAttack attacker, Vector3 position, Vector3 direction, float damage)
+    [PunRPC]
+    public void TakeDamageRPC(int attackerViewID, Vector3 position, Vector3 direction, float damage)
     {
-        agent.enabled = false;
-        rigid.isKinematic = false;
+        currentHP -= damage;
 
-        rigid.AddForce(damage * direction, ForceMode.Impulse);
+        animator.SetTrigger("Damaged");
 
-        if (damagedCoroutine != null)
-        {
-            StopCoroutine(damagedCoroutine);
-        }
         float damageValue = Mathf.Clamp((damage - 5.0f) / 5.0f, 0.0f, 1.0f);
-        float damageTime = Mathf.Lerp(0.25f, 0.5f, damageValue);
-        damagedCoroutine = StartCoroutine(DamagedCoroutine(damageTime));
-
-        animator.SetBool("Damaged", true);
         animator.SetFloat("DamageValue", damageValue);
-
+       
         float forwardValue = Vector3.Dot(transform.forward, direction);
         float rightValue = Vector3.Dot(transform.right, direction);
 
@@ -73,15 +66,37 @@ public class PlayerDamage : MonoBehaviour
         {
             animator.SetInteger("DamageDirection", 2);
         }
-        else if (rightValue > 0.71f)
+        else 
         {
             animator.SetInteger("DamageDirection", 3);
         }
 
-        currentHP -= damage;
+        if (photonView.IsMine)
+        {
+            agent.enabled = false;
+            agent.updatePosition = false;
+            agent.updateRotation = false;
+
+            rigid.isKinematic = false;
+
+            print($"dmg = {damage},forward = {forwardValue}, right = {rightValue}");
+            rigid.AddForce(damage * direction, ForceMode.Impulse);
+            
+            float damageTime = Mathf.Lerp(0.25f, 1.0f, damageValue);
+
+            if (damagedCoroutine != null)
+            {
+                StopCoroutine(damagedCoroutine);
+            }
+
+            damagedCoroutine = StartCoroutine(DamagedCoroutine(damageTime));
+        }
+
         if (currentHP <= 0)
-        {   
-            if (attacker == GameManager.Instance.playerModel.attack)
+        {
+            PlayerModel attacker = GameManager.Instance.wholeModels.Find((model) => model.photonView.ViewID == attackerViewID);
+
+            if (attacker != null && attacker.photonView.IsMine)
             {
                 GameManager.Instance.GetKill();
             }
@@ -97,10 +112,11 @@ public class PlayerDamage : MonoBehaviour
     private IEnumerator DamagedCoroutine(float time)
     {
         yield return new WaitForSeconds(time);
-        animator.SetBool("Damaged", false);
 
         rigid.isKinematic = true;
         agent.enabled = true;
+        agent.updatePosition = true;
+        agent.updateRotation = true;
 
         damagedCoroutine = null;
     }

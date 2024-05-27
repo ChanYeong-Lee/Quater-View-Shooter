@@ -37,14 +37,19 @@ public class Bullet : MonoBehaviourPun
         this.owner = owner;
         this.speed = speed;
 
-        Destroy(gameObject, lifeTime);
+        StartCoroutine(DestroyCoroutine(lifeTime));
+    }
+
+    private IEnumerator DestroyCoroutine(float time)
+    {
+        yield return new WaitForSeconds(time);
+        PhotonNetwork.Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (photonView.IsMine == false)
         {
-            Destroy(gameObject);
             return;
         }
 
@@ -54,20 +59,13 @@ public class Bullet : MonoBehaviourPun
 
         photonView.RPC("StartParticle", RpcTarget.All, hitPoint);
 
-        if (enemy != null)
+        if (enemy != null && enemy != owner)
         {
-            if (enemy == owner)
-            {
-                Destroy(gameObject);
-            }
-            else
-            {
-                target = enemy;
-                photonView.RPC("Attack", RpcTarget.All, hitPoint, hitDirection, damage);
-            }
+            int ownerViewID = owner.photonView.ViewID;
+            enemy.photonView.RPC("TakeDamageRPC", RpcTarget.All, ownerViewID, hitPoint, hitDirection, damage);
         }
 
-        Destroy(gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 
     [PunRPC]
@@ -75,11 +73,5 @@ public class Bullet : MonoBehaviourPun
     {
         ParticleSystem particle = Instantiate(particlePrefab, hitPoint, Quaternion.identity);
         Destroy(particle.gameObject, 0.25f);
-    }
-
-    [PunRPC]
-    public void Attack(Vector3 hitPoint, Vector3 hitDirection, float damage)
-    {
-        target.TakeDamage(owner, hitPoint, hitDirection, damage);
     }
 }

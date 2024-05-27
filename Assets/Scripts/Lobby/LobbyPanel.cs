@@ -11,6 +11,7 @@ public class LobbyPanel : UIBase
     public RoomElement roomPrefab;
 
     public Button exitButton;
+    public Button refreshButton;
     private List<RoomElement> rooms;
 
     private void Awake()
@@ -18,6 +19,7 @@ public class LobbyPanel : UIBase
         rooms = new List<RoomElement>();
 
         exitButton.onClick.AddListener(OnExitButtonClick);
+        refreshButton.onClick.AddListener(OnRefreshButtonClick);
     }
     
     private void OnEnable()
@@ -31,12 +33,13 @@ public class LobbyPanel : UIBase
         {
             return;
         }
+        
+        print("Open Lobby Panel, Update Room List");
 
         foreach (RoomElement room in rooms)
         {
             Destroy(room.gameObject);
         }
-
         rooms.Clear();
 
         foreach (RoomInfo room in PhotonManager.Instance.roomList)
@@ -50,5 +53,10 @@ public class LobbyPanel : UIBase
     private void OnExitButtonClick()
     {
         PhotonNetwork.LeaveLobby();
+    }
+
+    private void OnRefreshButtonClick()
+    {
+        UpdateRoomList();
     }
 }

@@ -1702,7 +1702,6 @@ GameObject:
   - component: {fileID: 4561577717370457166}
   - component: {fileID: 2499461391906740661}
   - component: {fileID: 8839666562141649024}
-  - component: {fileID: 5430982043616805575}
   - component: {fileID: 9100564305778659520}
   - component: {fileID: 4881058375999982364}
   - component: {fileID: 4267605783444677499}
@@ -1863,7 +1862,7 @@ MonoBehaviour:
   attackTime: 0
   bulletPrefab: {fileID: 7951848266672928713, guid: 98f539f4a8ce99b4dacddeb5a8cbaad9,
     type: 3}
-  bulletSpeed: 25
+  bulletSpeed: 40
   shotPoint: {fileID: 1134602404368850543}
   inputAttack: 0
   canAttack: 0
@@ -1888,22 +1887,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5430982043616805575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4870257532627549002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64179f3720bbfe947b7724caa67b7c1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SynchronizeVelocity: 1
-  m_SynchronizeAngularVelocity: 0
-  m_TeleportEnabled: 0
-  m_TeleportIfDistanceGreaterThan: 3
 --- !u!114 &9100564305778659520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1923,7 +1906,6 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: 5430982043616805575}
   - {fileID: 4881058375999982364}
   - {fileID: 4267605783444677499}
   sceneViewId: 0
@@ -1964,22 +1946,22 @@ MonoBehaviour:
     SynchronizeType: 2
     Name: MoveSpeed
   - Type: 1
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: DamageValue
   - Type: 3
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: DamageDirection
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Damaged
   - Type: 4
-    SynchronizeType: 2
+    SynchronizeType: 1
     Name: Dash
   - Type: 9
-    SynchronizeType: 2
+    SynchronizeType: 0
     Name: Dead
   m_SynchronizeLayers:
-  - SynchronizeType: 2
+  - SynchronizeType: 1
     LayerIndex: 0
 --- !u!1 &4882613927453603721
 GameObject:

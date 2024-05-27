@@ -41,6 +41,7 @@ MonoBehaviour:
   - RespawnSpaceship
   - Attack
   - StartParticle
+  - TakeDamageRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
